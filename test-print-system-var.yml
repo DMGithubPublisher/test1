@@ -8,7 +8,7 @@ trigger: none
 pool:
   name: 'rd2-build-pool'
   demands:
-  - Agent.Name -equals '104_win_server_build'
+    - Agent.Name -equals 104_win_server_build
 
 variables:
   - name: myCustomVar
