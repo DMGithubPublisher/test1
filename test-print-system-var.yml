@@ -1,0 +1,150 @@
+# =============================================================================
+# Azure DevOps - 全面系统内置变量输出 Pipeline
+# 运行时所有变量值会输出到日志，方便查阅和调试
+# =============================================================================
+
+trigger: none
+
+pool:
+  name: 'rd2-build-pool'
+  demands:
+  - Agent.Name -equals '104_win_server_build'
+
+variables:
+  - name: myCustomVar
+    value: 'HelloFromCustomVar'
+
+jobs:
+  - job: PrintAllSystemVariables
+    displayName: '输出所有 Azure DevOps 系统内置变量'
+    steps:
+
+      # =========================================
+      # 使用 PowerShell 输出所有环境变量 & 预定义变量
+      # =========================================
+      - pwsh: |
+          Write-Host "=============================================" -ForegroundColor Cyan
+          Write-Host "  Azure DevOps 系统内置变量大全"
+          Write-Host "=============================================" -ForegroundColor Cyan
+          Write-Host ""
+
+          # ---- Agent 相关 ----
+          Write-Host "========== Agent Variables ==========" -ForegroundColor Yellow
+          Write-Host "Agent.Name                          = $(Agent.Name)"
+          Write-Host "Agent.MachineName                   = $(Agent.MachineName)"
+          Write-Host "Agent.Id                            = $(Agent.Id)"
+          Write-Host "Agent.HomeDirectory                 = $(Agent.HomeDirectory)"
+          Write-Host "Agent.TempDirectory                 = $(Agent.TempDirectory)"
+          Write-Host "Agent.ToolsDirectory                = $(Agent.ToolsDirectory)"
+          Write-Host "Agent.WorkFolder                    = $(Agent.WorkFolder)"
+          Write-Host "Agent.OS                            = $(Agent.OS)"
+          Write-Host "Agent.OSArchitecture                = $(Agent.OSArchitecture)"
+          Write-Host "Agent.Version                       = $(Agent.Version)"
+          Write-Host "Agent.JobStatus                     = $(Agent.JobStatus)"
+          Write-Host "Agent.JobName                       = $(Agent.JobName)"
+          Write-Host ""
+
+          # ---- Build 相关 ----
+          Write-Host "========== Build Variables ==========" -ForegroundColor Yellow
+          Write-Host "Build.BuildId                       = $(Build.BuildId)"
+          Write-Host "Build.BuildNumber                   = $(Build.BuildNumber)"
+          Write-Host "Build.BuildUri                      = $(Build.BuildUri)"
+          Write-Host "Build.DefinitionName                = $(Build.DefinitionName)"
+          Write-Host "Build.DefinitionId                  = $(Build.DefinitionId)"
+          Write-Host "Build.QueuedBy                      = $(Build.QueuedBy)"
+          Write-Host "Build.QueuedById                    = $(Build.QueuedById)"
+          Write-Host "Build.Reason                        = $(Build.Reason)"
+          Write-Host "Build.RequestedFor                  = $(Build.RequestedFor)"
+          Write-Host "Build.RequestedForId                = $(Build.RequestedForId)"
+          Write-Host "Build.RequestedForEmail             = $(Build.RequestedForEmail)"
+          Write-Host "Build.SourceBranch                  = $(Build.SourceBranch)"
+          Write-Host "Build.SourceBranchName              = $(Build.SourceBranchName)"
+          Write-Host "Build.SourceVersion                 = $(Build.SourceVersion)"
+          Write-Host "Build.SourceVersionMessage          = $(Build.SourceVersionMessage)"
+          Write-Host "Build.Repository.Name               = $(Build.Repository.Name)"
+          Write-Host "Build.Repository.ID                 = $(Build.Repository.ID)"
+          Write-Host "Build.Repository.Provider           = $(Build.Repository.Provider)"
+          Write-Host "Build.Repository.Uri                = $(Build.Repository.Uri)"
+          Write-Host "Build.Repository.Clean              = $(Build.Repository.Clean)"
+          Write-Host "Build.StagingDirectory              = $(Build.StagingDirectory)"
+          Write-Host "Build.ArtifactStagingDirectory      = $(Build.ArtifactStagingDirectory)"
+          Write-Host "Build.BinariesDirectory             = $(Build.BinariesDirectory)"
+          Write-Host "Build.SourcesDirectory              = $(Build.SourcesDirectory)"
+          Write-Host "Build.Reason                        = $(Build.Reason)"
+          Write-Host "Build.ContainerId                   = $(Build.ContainerId)"
+          Write-Host ""
+
+          # ---- System 相关 ----
+          Write-Host "========== System Variables ==========" -ForegroundColor Yellow
+          Write-Host "System.TeamFoundationServerUri      = $(System.TeamFoundationServerUri)"
+          Write-Host "System.TeamFoundationCollectionUri  = $(System.TeamFoundationCollectionUri)"
+          Write-Host "System.CollectionId                 = $(System.CollectionId)"
+          Write-Host "System.DefinitionId                 = $(System.DefinitionId)"
+          Write-Host "System.DefinitionName               = $(System.DefinitionName)"
+          Write-Host "System.TeamProject                  = $(System.TeamProject)"
+          Write-Host "System.TeamProjectId                = $(System.TeamProjectId)"
+          Write-Host "System.DefaultWorkingDirectory      = $(System.DefaultWorkingDirectory)"
+          Write-Host "System.ArtifactsDirectory           = $(System.ArtifactsDirectory)"
+          Write-Host "System.PullRequest.PullRequestId    = $(System.PullRequest.PullRequestId)"
+          Write-Host "System.PullRequest.PullRequestNumber= $(System.PullRequest.PullRequestNumber)"
+          Write-Host "System.PullRequest.SourceBranch     = $(System.PullRequest.SourceBranch)"
+          Write-Host "System.PullRequest.TargetBranch     = $(System.PullRequest.TargetBranch)"
+          Write-Host "System.PullRequest.SourceCommitId   = $(System.PullRequest.SourceCommitId)"
+          Write-Host "System.PullRequest.TargetCommitId   = $(System.PullRequest.TargetCommitId)"
+          Write-Host "System.PullRequest.SourceRepositoryUri = $(System.PullRequest.SourceRepositoryUri)"
+          Write-Host "System.PullRequest.IsFork           = $(System.PullRequest.IsFork)"
+          Write-Host "System.JobId                        = $(System.JobId)"
+          Write-Host "System.JobName                      = $(System.JobName)"
+          Write-Host "System.JobDisplayName               = $(System.JobDisplayName)"
+          Write-Host "System.JobAttempt                   = $(System.JobAttempt)"
+          Write-Host "System.JobPositionInPhase           = $(System.JobPositionInPhase)"
+          Write-Host "System.TaskDisplayName              = $(System.TaskDisplayName)"
+          Write-Host "System.StageName                    = $(System.StageName)"
+          Write-Host "System.StageDisplayName             = $(System.StageDisplayName)"
+          Write-Host "System.PhaseName                    = $(System.PhaseName)"
+          Write-Host "System.PhaseDisplayName             = $(System.PhaseDisplayName)"
+          Write-Host "System.HostType                     = $(System.HostType)"
+          Write-Host "System.ServerType                   = $(System.ServerType)"
+          Write-Host "System.AccessToken                  = ***HIDDEN***"
+          Write-Host "System.Debug                        = $(System.Debug)"
+          Write-Host "System.TF                            = $(System.TF)"
+          Write-Host ""
+
+          # ---- Pipeline (环境资源) 相关 ----
+          Write-Host "========== Pipeline Variables ==========" -ForegroundColor Yellow
+          Write-Host "Pipeline.Workspace                  = $(Pipeline.Workspace)"
+          Write-Host ""
+
+          # ---- Release 相关 (Classic) ----
+          Write-Host "========== Release Variables ==========" -ForegroundColor Yellow
+          Write-Host "Release.ReleaseId                   = $(Release.ReleaseId)"
+          Write-Host "Release.ReleaseName                 = $(Release.ReleaseName)"
+          Write-Host "Release.DefinitionName              = $(Release.DefinitionName)"
+          Write-Host "Release.DefinitionId                = $(Release.DefinitionId)"
+          Write-Host "Release.EnvironmentName             = $(Release.EnvironmentName)"
+          Write-Host "Release.EnvironmentId               = $(Release.EnvironmentId)"
+          Write-Host "Release.Artifacts.{alias}.DefinitionName = (动态)"
+          Write-Host "Release.Deployment.RequestedFor     = $(Release.Deployment.RequestedFor)"
+          Write-Host "Release.Deployment.RequestedForId   = $(Release.Deployment.RequestedForId)"
+          Write-Host ""
+
+          # ---- 常用的表达式/函数 ----
+          Write-Host "========== Common Expressions ==========" -ForegroundColor Yellow
+          Write-Host "variables['myCustomVar']            = ${{ variables.myCustomVar }}"
+          Write-Host ""
+
+          # ---- 所有环境变量 (含更多内置) ----
+          Write-Host "========== All Environment Variables (Filtered) ==========" -ForegroundColor Yellow
+          Get-ChildItem Env: | Where-Object { $_.Name -match '^(BUILD_|SYSTEM_|AGENT_|RELEASE_|PIPELINE_|TF_|VSTS_|INPUT_|ENDPOINT_|AZURE_)' } |
+            Sort-Object Name |
+            ForEach-Object {
+              $val = if ($_.Name -match 'TOKEN|PASS|SECRET|KEY|AUTH') { '***HIDDEN***' } else { $_.Value }
+              Write-Host "$($_.Name) = $val"
+            }
+
+          Write-Host ""
+          Write-Host "=============================================" -ForegroundColor Cyan
+          Write-Host "  变量输出完毕"
+          Write-Host "=============================================" -ForegroundColor Cyan
+        displayName: '输出系统内置变量'
+        name: PrintVars
