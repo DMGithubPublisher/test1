@@ -1,0 +1,37 @@
+
+trigger: none
+
+pool:
+  name: 'rd2-build-pool'
+  demands:
+    - Agent.Name -equals 112_win_python_build
+
+variables:
+  - group: GithubSecrets  # 包含 GITHUB_PAT 和 GITHUB_USER_NAME 的变量组
+
+jobs:
+  - job: TestPushGithub
+    displayName: '测试使用 PAT 推送到 GitHub'
+    steps:
+      - checkout: self
+        clean: true
+        fetchDepth: 1
+        path: s\test1
+
+      - script: |
+          @echo off
+          :: 1. 进入你的代码目录（如果在s目录，默认就在这里，可以省略）
+          cd /d "$(Build.SourcesDirectory)"
+
+          git add .
+          git commit -m "Automated build commit [skip ci]"
+
+          :: 3. 使用 PAT 进行 Push
+          :: 假设你的仓库是 github.com/jane-dynamsoft/test1.git
+          echo 正在推送到 GitHub...
+          git push https://%GITHUB_USER_NAME%:%GITHUB_PAT%@github.com/jane-dynamsoft/test1.git HEAD:main
+
+        displayName: '使用 PAT 执行 Git Push'
+        env:
+          GITHUB_PAT: $(GITHUB_PAT)         # 必须映射机密变量
+          GITHUB_USER_NAME: $(GITHUB_USER_NAME)
