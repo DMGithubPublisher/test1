@@ -15,13 +15,13 @@ jobs:
     steps:
       - checkout: self
         clean: true
-        fetchDepth: 1
+        fetchDepth: 0
         path: s/test1
 
       - script: |
           @echo off
           cd /d "$(Build.SourcesDirectory)"
-          
+
           echo 正在推送到 GitHub...
           :: --force 用于覆盖 GitHub 上的初始提交（如空仓库有 README 等）
           :: 若 GitHub 仓库完全为空（0 commits），可去掉 --force
