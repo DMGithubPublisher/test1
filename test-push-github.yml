@@ -16,22 +16,18 @@ jobs:
       - checkout: self
         clean: true
         fetchDepth: 1
-        path: s\test1
+        path: s/test1
 
       - script: |
           @echo off
-          :: 1. 进入你的代码目录（如果在s目录，默认就在这里，可以省略）
           cd /d "$(Build.SourcesDirectory)"
 
-          git add .
-          git commit -m "Automated build commit [skip ci]"
-
-          :: 3. 使用 PAT 进行 Push
-          :: 假设你的仓库是 github.com/jane-dynamsoft/test1.git
           echo 正在推送到 GitHub...
-          git push https://%GITHUB_USER_NAME%:%GITHUB_PAT%@github.com/jane-dynamsoft/test1.git HEAD:main
+          :: --force 用于覆盖 GitHub 上的初始提交（如空仓库有 README 等）
+          :: 若 GitHub 仓库完全为空（0 commits），可去掉 --force
+          git push --force https://%GITHUB_USER_NAME%:%GITHUB_PAT%@github.com/jane-dynamsoft/test1.git HEAD:main
 
-        displayName: '使用 PAT 执行 Git Push'
+        displayName: '同步推送到 GitHub'
         env:
-          GITHUB_PAT: $(GITHUB_PAT)         # 必须映射机密变量
+          GITHUB_PAT: $(GITHUB_PAT)
           GITHUB_USER_NAME: $(GITHUB_USER_NAME)
